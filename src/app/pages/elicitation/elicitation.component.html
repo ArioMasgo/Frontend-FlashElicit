@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-gray-50 dark:bg-[#1a1f2e] flex flex-col transition-colors duration-300">
+  <!-- Header -->
+  <header class="bg-white dark:bg-[#1a1f2e] border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h1 class="text-xl font-bold text-gray-900 dark:text-white">FlashElicit</h1>
+      </div>
+      <app-theme-toggle />
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+      <!-- Título y formulario centrado -->
+      <div class="text-center mb-8">
+        <!-- Icon -->
+        <div class="mb-6 flex justify-center">
+          <div class="relative">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-xl">
+              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <!-- Glow effect -->
+            <div class="absolute inset-0 w-20 h-20 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+          Iniciar Elicitación de Requisitos
+        </h2>
+
+        <!-- Input Form Container -->
+        <form [formGroup]="elicitationForm" (ngSubmit)="onSubmit()" class="w-full bg-white dark:bg-[#252b3d] rounded-xl border border-gray-300 dark:border-gray-700 shadow-lg overflow-hidden">
+          <!-- Input Area -->
+          <div class="p-4">
+            <textarea
+              formControlName="userInput"
+              [placeholder]="placeholder()"
+              (blur)="onInputBlur()"
+              class="w-full min-h-[2.5rem] max-h-48 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none focus:outline-none text-base disabled:opacity-50"
+              [style.height]="'auto'"
+              (input)="$any($event.target).style.height = 'auto'; $any($event.target).style.height = $any($event.target).scrollHeight + 'px'"
+            ></textarea>
+          </div>
+
+          <!-- Bottom Bar -->
+          <div class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-[#1e2433] border-t border-gray-200 dark:border-gray-700">
+            <!-- Left Side: Action Buttons -->
+            <div class="flex items-center gap-2">
+              <!-- Comentario Button -->
+              <button
+                type="button"
+                (click)="selectInputType('comment')"
+                [class.bg-blue-100]="selectedInputType() === 'comment'"
+                [class.dark:bg-blue-900]="selectedInputType() === 'comment'"
+                [class.text-blue-700]="selectedInputType() === 'comment'"
+                [class.dark:text-blue-300]="selectedInputType() === 'comment'"
+                class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+                <span>Comentario</span>
+              </button>
+
+              <!-- Link de app Button -->
+              <button
+                type="button"
+                (click)="selectInputType('appLink')"
+                [class.bg-blue-100]="selectedInputType() === 'appLink'"
+                [class.dark:bg-blue-900]="selectedInputType() === 'appLink'"
+                [class.text-blue-700]="selectedInputType() === 'appLink'"
+                [class.dark:text-blue-300]="selectedInputType() === 'appLink'"
+                class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <span>Link de app</span>
+              </button>
+            </div>
+
+            <!-- Right Side: Send Button -->
+            <button
+              type="submit"
+              [disabled]="!isFormValid()"
+              [class.opacity-50]="!isFormValid()"
+              [class.cursor-not-allowed]="!isFormValid()"
+              [class.hover:bg-blue-700]="isFormValid()"
+              class="p-2 rounded-lg bg-blue-600 text-white transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Error Message -->
+          @if (errorMessage()) {
+            <div class="px-4 py-2 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800">
+              <p class="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ errorMessage() }}
+              </p>
+            </div>
+          }
+        </form>
+
+        <!-- Helper text -->
+        <p class="text-gray-600 dark:text-gray-500 text-xs mt-4">
+          @if (selectedInputType() === 'comment') {
+            💡 Escribe al menos 6 palabras para describir tu idea o requisito
+          } @else {
+            🔗 Ejemplo: https://play.google.com/store/apps/details?id=com.bcp.bank.bcp&hl=es_419
+          }
+        </p>
+      </div>
+
+      <!-- Resultados -->
+      @if (resultado()) {
+        <div class="mt-8 animate-fade-in">
+          <app-requisitos-comentario-unico [resultado]="resultado()!" />
+        </div>
+      }
+    </div>
+  </main>
+</div>
