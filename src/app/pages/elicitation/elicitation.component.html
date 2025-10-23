@@ -125,11 +125,18 @@
           }
         </p>
       </div>
-
+    </div>
+    <div class="max-w-7xl mx-auto">
       <!-- Resultados -->
-      @if (resultado()) {
+      @if (resultadoComentario()) {
         <div class="mt-8 animate-fade-in">
-          <app-requisitos-comentario-unico [resultado]="resultado()!" />
+          <app-requisitos-comentario-unico [resultado]="resultadoComentario()!" />
+        </div>
+      }
+
+      @if (resultadoScraping()) {
+        <div class="mt-8 animate-fade-in">
+          <app-requisitos-scraping [resultado]="resultadoScraping()!" />
         </div>
       }
     </div>

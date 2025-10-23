@@ -4,14 +4,16 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
 import { CommonModule } from '@angular/common';
 import { RequisitosScrapingService } from '../../services/requisitos-scraping.service';
 import { RequestComentarioUnico, ResponseComentarioUnico } from '../../models/requisitos-Unicos.interface';
+import { RequestComentariosScraping, ResponseComentariosScraping } from '../../models/requisitos-scraping.interface';
 import { RequisitosComentarioUnico } from '../../components/requisitos-comentarioUnico/requisitos-comentarioUnico';
+import { RequisitosScraping } from '../../components/requisitos-scraping/requisitos-scraping';
 
 type InputType = 'comment' | 'appLink';
 
 @Component({
   selector: 'app-elicitation',
   standalone: true,
-  imports: [ReactiveFormsModule, ThemeToggleComponent, CommonModule, RequisitosComentarioUnico],
+  imports: [ReactiveFormsModule, ThemeToggleComponent, CommonModule, RequisitosComentarioUnico, RequisitosScraping],
   templateUrl: './elicitation.component.html',
   styleUrl: './elicitation.component.css'
 })
@@ -20,10 +22,12 @@ export class ElicitationComponent {
   selectedInputType = signal<InputType>('comment');
   errorMessage = signal<string>('');
   isFormValid = signal<boolean>(false);
-  resultado = signal<ResponseComentarioUnico | null>(null);
-  
+  resultadoComentario = signal<ResponseComentarioUnico | null>(null);
+  resultadoScraping = signal<ResponseComentariosScraping | null>(null);
+
   private requisitosScrapingService = inject(RequisitosScrapingService);
-  private readonly SESSION_STORAGE_KEY = 'flashelicit_resultado';
+  private readonly SESSION_STORAGE_KEY_COMMENT = 'flashelicit_resultado_comment';
+  private readonly SESSION_STORAGE_KEY_SCRAPING = 'flashelicit_resultado_scraping';
 
   // FormGroup reactivo
   elicitationForm = new FormGroup({
@@ -85,8 +89,8 @@ export class ElicitationComponent {
   selectInputType(type: InputType) {
     this.selectedInputType.set(type);
     this.errorMessage.set('');
-    // NO limpiar el resultado al cambiar de tipo, solo limpiar el input
-    this.clearResult(); // Limpiar resultado anterior y sessionStorage
+    // Limpiar ambos resultados al cambiar de tipo
+    this.clearResults();
     this.elicitationForm.get('userInput')?.setValue('');
     this.isFormValid.set(false);
   }
@@ -129,27 +133,26 @@ export class ElicitationComponent {
 
   onSubmit() {
     const input = this.elicitationForm.get('userInput')?.value || '';
-    
+
     if (!this.isFormValid()) {
       return;
     }
 
     const type = this.selectedInputType();
-    
+
     if (type === 'comment') {
-      this.clearResult(); // Limpiar resultado anterior antes de la nueva petición
-      
+      this.clearResults(); // Limpiar resultados anteriores antes de la nueva petición
+
       const request: RequestComentarioUnico = {
         comentario: input
       };
 
       this.requisitosScrapingService.createRequisitoUnico(request).subscribe({
         next: (response) => {
-          console.log('Respuesta del servidor:', response);
-          // La respuesta es un objeto único, no un array
+          console.log('Respuesta del servidor (comentario):', response);
           if (response) {
-            this.resultado.set(response);
-            this.saveResultToSession(response); // Guardar en sessionStorage
+            this.resultadoComentario.set(response);
+            this.saveCommentResultToSession(response);
           }
           this.elicitationForm.reset();
           this.errorMessage.set('');
@@ -162,40 +165,81 @@ export class ElicitationComponent {
       });
 
     } else {
-      const appId = this.extractAppId(input);
-      console.log('App ID extraído:', appId);
-      console.log('Link completo:', input);
-      // Aquí irá la lógica para enviar el appId al backend
+      this.clearResults(); // Limpiar resultados anteriores antes de la nueva petición
+
+      const request: RequestComentariosScraping = {
+        playstore_url: input,
+        max_reviews: 50,
+        max_rating: 3
+      };
+
+      this.requisitosScrapingService.createRequisitosScraping(request).subscribe({
+        next: (response) => {
+          console.log('Respuesta del servidor (scraping):', response);
+          if (response) {
+            this.resultadoScraping.set(response);
+            this.saveScrapingResultToSession(response);
+          }
+          this.elicitationForm.reset();
+          this.errorMessage.set('');
+          this.isFormValid.set(false);
+        },
+        error: (error) => {
+          console.error('Error al procesar scraping:', error);
+          this.errorMessage.set('Error al procesar el link. Verifica que sea válido e intenta nuevamente.');
+        }
+      });
     }
   }
 
-  // Métodos para manejar sessionStorage
-  private saveResultToSession(resultado: ResponseComentarioUnico): void {
+  // Métodos para manejar sessionStorage - Comentarios
+  private saveCommentResultToSession(resultado: ResponseComentarioUnico): void {
     try {
-      sessionStorage.setItem(this.SESSION_STORAGE_KEY, JSON.stringify(resultado));
+      sessionStorage.setItem(this.SESSION_STORAGE_KEY_COMMENT, JSON.stringify(resultado));
     } catch (error) {
-      console.error('Error al guardar en sessionStorage:', error);
+      console.error('Error al guardar comentario en sessionStorage:', error);
+    }
+  }
+
+  // Métodos para manejar sessionStorage - Scraping
+  private saveScrapingResultToSession(resultado: ResponseComentariosScraping): void {
+    try {
+      sessionStorage.setItem(this.SESSION_STORAGE_KEY_SCRAPING, JSON.stringify(resultado));
+    } catch (error) {
+      console.error('Error al guardar scraping en sessionStorage:', error);
     }
   }
 
   private loadResultFromSession(): void {
     try {
-      const savedResult = sessionStorage.getItem(this.SESSION_STORAGE_KEY);
-      if (savedResult) {
-        const resultado: ResponseComentarioUnico = JSON.parse(savedResult);
-        this.resultado.set(resultado);
+      // Intentar cargar resultado de comentario
+      const savedCommentResult = sessionStorage.getItem(this.SESSION_STORAGE_KEY_COMMENT);
+      if (savedCommentResult) {
+        const resultado: ResponseComentarioUnico = JSON.parse(savedCommentResult);
+        this.resultadoComentario.set(resultado);
+        this.selectedInputType.set('comment');
+      }
+
+      // Intentar cargar resultado de scraping
+      const savedScrapingResult = sessionStorage.getItem(this.SESSION_STORAGE_KEY_SCRAPING);
+      if (savedScrapingResult) {
+        const resultado: ResponseComentariosScraping = JSON.parse(savedScrapingResult);
+        this.resultadoScraping.set(resultado);
+        this.selectedInputType.set('appLink');
       }
     } catch (error) {
       console.error('Error al cargar desde sessionStorage:', error);
       // Si hay error al parsear, limpiar el storage
-      sessionStorage.removeItem(this.SESSION_STORAGE_KEY);
+      this.clearResults();
     }
   }
 
-  private clearResult(): void {
-    this.resultado.set(null);
+  private clearResults(): void {
+    this.resultadoComentario.set(null);
+    this.resultadoScraping.set(null);
     try {
-      sessionStorage.removeItem(this.SESSION_STORAGE_KEY);
+      sessionStorage.removeItem(this.SESSION_STORAGE_KEY_COMMENT);
+      sessionStorage.removeItem(this.SESSION_STORAGE_KEY_SCRAPING);
     } catch (error) {
       console.error('Error al limpiar sessionStorage:', error);
     }

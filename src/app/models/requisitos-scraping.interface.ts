@@ -53,3 +53,12 @@ export interface Review {
     categoria:    string;
     confianza:    number;
 }
+
+// Interface para la generación de PDF
+export interface PDFGenerationRequest {
+    app_id: string;
+    fecha_generacion: string;
+    total_comentarios_analizados: number;
+    requisitos: Requisito[];
+    resumen: Resumen;
+}
