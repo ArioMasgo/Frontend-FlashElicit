@@ -29,7 +29,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   pbDirection: PB_DIRECTION.leftToRight,
   pbThickness: 3,
   hasProgressBar: true,
-  text: 'Generando requisitos',
+  text: 'Procesando...',
   textColor: '#FFFFFF',
   textPosition: POSITION.centerCenter,
   maxTime: -1,

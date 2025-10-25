@@ -1,7 +1,8 @@
 export interface RequestComentariosScraping{ 
   playstore_url: string,
   max_reviews: number,
-  max_rating: number
+  max_rating: number,
+  criterios_busqueda: "recientes" | "relevantes"
 }
 export interface ResponseComentariosScraping {
     success:       boolean;

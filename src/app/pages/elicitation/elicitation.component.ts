@@ -1,5 +1,5 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
 import { CommonModule } from '@angular/common';
 import { RequisitosScrapingService } from '../../services/requisitos-scraping.service';
@@ -13,7 +13,7 @@ type InputType = 'comment' | 'appLink';
 @Component({
   selector: 'app-elicitation',
   standalone: true,
-  imports: [ReactiveFormsModule, ThemeToggleComponent, CommonModule, RequisitosComentarioUnico, RequisitosScraping],
+  imports: [ReactiveFormsModule, FormsModule, ThemeToggleComponent, CommonModule, RequisitosComentarioUnico, RequisitosScraping],
   templateUrl: './elicitation.component.html',
   styleUrl: './elicitation.component.css'
 })
@@ -24,6 +24,8 @@ export class ElicitationComponent {
   isFormValid = signal<boolean>(false);
   resultadoComentario = signal<ResponseComentarioUnico | null>(null);
   resultadoScraping = signal<ResponseComentariosScraping | null>(null);
+  criteriosBusqueda = signal<'recientes' | 'relevantes'>('recientes');
+  isCriteriosDropdownOpen = signal<boolean>(false);
 
   private requisitosScrapingService = inject(RequisitosScrapingService);
   private readonly SESSION_STORAGE_KEY_COMMENT = 'flashelicit_resultado_comment';
@@ -93,6 +95,10 @@ export class ElicitationComponent {
     this.clearResults();
     this.elicitationForm.get('userInput')?.setValue('');
     this.isFormValid.set(false);
+    // Resetear criterio de búsqueda al valor por defecto
+    this.criteriosBusqueda.set('recientes');
+    // Cerrar dropdown si está abierto
+    this.isCriteriosDropdownOpen.set(false);
   }
 
   private validateComment(text: string, showError: boolean): boolean {
@@ -170,7 +176,8 @@ export class ElicitationComponent {
       const request: RequestComentariosScraping = {
         playstore_url: input,
         max_reviews: 50,
-        max_rating: 3
+        max_rating: 3,
+        criterios_busqueda: this.criteriosBusqueda()
       };
 
       this.requisitosScrapingService.createRequisitosScraping(request).subscribe({
@@ -243,5 +250,19 @@ export class ElicitationComponent {
     } catch (error) {
       console.error('Error al limpiar sessionStorage:', error);
     }
+  }
+
+  // Métodos para manejar dropdown de criterios de búsqueda
+  toggleCriteriosDropdown(): void {
+    this.isCriteriosDropdownOpen.update(val => !val);
+  }
+
+  selectCriterio(criterio: 'recientes' | 'relevantes'): void {
+    this.criteriosBusqueda.set(criterio);
+    this.isCriteriosDropdownOpen.set(false);
+  }
+
+  closeCriteriosDropdown(): void {
+    this.isCriteriosDropdownOpen.set(false);
   }
 }
