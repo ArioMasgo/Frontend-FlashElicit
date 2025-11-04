@@ -1,3 +1,5 @@
+export type InputType = 'comment' | 'appLink';
+
 export interface RequestComentariosScraping{ 
   playstore_url: string,
   max_reviews: number,

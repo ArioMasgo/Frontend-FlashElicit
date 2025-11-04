@@ -1,19 +1,28 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../../components/header/header.component';
+import { FooterComponent } from '../../components/footer/footer.component';
+import { RequisitosComentarioUnico } from '../../components/requisitos-comentarioUnico/requisitos-comentarioUnico.component';
+import { RequisitosScraping } from '../../components/requisitos-scraping/requisitos-scraping.component';
+import { ThemeService } from '../../services/theme.service';
 import { RequisitosScrapingService } from '../../services/requisitos-scraping.service';
+import { EnvironmentService } from '../../services/environment.service';
+import { InputType, RequestComentariosScraping, ResponseComentariosScraping } from '../../models/requisitos-scraping.interface';
 import { RequestComentarioUnico, ResponseComentarioUnico } from '../../models/requisitos-Unicos.interface';
-import { RequestComentariosScraping, ResponseComentariosScraping } from '../../models/requisitos-scraping.interface';
-import { RequisitosComentarioUnico } from '../../components/requisitos-comentarioUnico/requisitos-comentarioUnico';
-import { RequisitosScraping } from '../../components/requisitos-scraping/requisitos-scraping';
-
-type InputType = 'comment' | 'appLink';
 
 @Component({
   selector: 'app-elicitation',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, ThemeToggleComponent, CommonModule, RequisitosComentarioUnico, RequisitosScraping],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    RequisitosComentarioUnico,
+    RequisitosScraping,
+    HeaderComponent,
+    FooterComponent
+  ],
   templateUrl: './elicitation.component.html',
   styleUrl: './elicitation.component.css'
 })
@@ -154,7 +163,7 @@ export class ElicitationComponent {
       };
 
       this.requisitosScrapingService.createRequisitoUnico(request).subscribe({
-        next: (response) => {
+        next: (response: ResponseComentarioUnico) => {
           console.log('Respuesta del servidor (comentario):', response);
           if (response) {
             this.resultadoComentario.set(response);
@@ -164,7 +173,7 @@ export class ElicitationComponent {
           this.errorMessage.set('');
           this.isFormValid.set(false);
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error al enviar comentario:', error);
           this.errorMessage.set('Error al procesar el comentario. Intenta nuevamente.');
         }
@@ -181,7 +190,7 @@ export class ElicitationComponent {
       };
 
       this.requisitosScrapingService.createRequisitosScraping(request).subscribe({
-        next: (response) => {
+        next: (response: ResponseComentariosScraping) => {
           console.log('Respuesta del servidor (scraping):', response);
           if (response) {
             this.resultadoScraping.set(response);
@@ -191,7 +200,7 @@ export class ElicitationComponent {
           this.errorMessage.set('');
           this.isFormValid.set(false);
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error al procesar scraping:', error);
           this.errorMessage.set('Error al procesar el link. Verifica que sea válido e intenta nuevamente.');
         }

@@ -1,18 +1,5 @@
 <div class="min-h-screen bg-gray-50 dark:bg-[#1a1f2e] flex flex-col transition-colors duration-300">
-  <!-- Header -->
-  <header class="bg-white dark:bg-[#1a1f2e] border-b border-gray-200 dark:border-gray-800 px-4 py-3">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <h1 class="text-xl font-bold text-gray-900 dark:text-white">FlashElicit</h1>
-      </div>
-      <app-theme-toggle />
-    </div>
-  </header>
+  <app-header />
 
   <!-- Main Content -->
   <main class="flex-1 px-4 py-8">
@@ -22,13 +9,13 @@
         <!-- Icon -->
         <div class="mb-6 flex justify-center">
           <div class="relative">
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-xl">
+            <div class="w-20 h-20 bg-gradient-to-br from-dark-blue-500 to-dark-blue-600 rounded-full flex items-center justify-center shadow-xl">
               <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <!-- Glow effect -->
-            <div class="absolute inset-0 w-20 h-20 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
+            <div class="absolute inset-0 w-20 h-20 bg-dark-blue-500 rounded-full opacity-20 blur-xl"></div>
           </div>
         </div>
 
@@ -79,12 +66,12 @@
                       [class.bg-gray-100]="criteriosBusqueda() === 'recientes'"
                       [class.dark:bg-gray-700]="criteriosBusqueda() === 'recientes'"
                     >
-                      <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 text-dark-blue-600 dark:text-dark-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span class="flex-1 text-gray-900 dark:text-gray-100">Más recientes</span>
                       @if (criteriosBusqueda() === 'recientes') {
-                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-dark-blue-600 dark:text-dark-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                       }
@@ -103,7 +90,7 @@
                       </svg>
                       <span class="flex-1 text-gray-900 dark:text-gray-100">Más relevantes</span>
                       @if (criteriosBusqueda() === 'relevantes') {
-                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-dark-blue-600 dark:text-dark-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                       }
@@ -130,10 +117,10 @@
               <button
                 type="button"
                 (click)="selectInputType('comment')"
-                [class.bg-blue-100]="selectedInputType() === 'comment'"
-                [class.dark:bg-blue-900]="selectedInputType() === 'comment'"
-                [class.text-blue-700]="selectedInputType() === 'comment'"
-                [class.dark:text-blue-300]="selectedInputType() === 'comment'"
+                [class.bg-dark-blue-100]="selectedInputType() === 'comment'"
+                [class.dark:bg-dark-blue-900]="selectedInputType() === 'comment'"
+                [class.text-dark-blue-700]="selectedInputType() === 'comment'"
+                [class.dark:text-dark-blue-300]="selectedInputType() === 'comment'"
                 class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,10 +133,10 @@
               <button
                 type="button"
                 (click)="selectInputType('appLink')"
-                [class.bg-blue-100]="selectedInputType() === 'appLink'"
-                [class.dark:bg-blue-900]="selectedInputType() === 'appLink'"
-                [class.text-blue-700]="selectedInputType() === 'appLink'"
-                [class.dark:text-blue-300]="selectedInputType() === 'appLink'"
+                [class.bg-dark-blue-100]="selectedInputType() === 'appLink'"
+                [class.dark:bg-dark-blue-900]="selectedInputType() === 'appLink'"
+                [class.text-dark-blue-700]="selectedInputType() === 'appLink'"
+                [class.dark:text-dark-blue-300]="selectedInputType() === 'appLink'"
                 class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,8 +152,8 @@
               [disabled]="!isFormValid()"
               [class.opacity-50]="!isFormValid()"
               [class.cursor-not-allowed]="!isFormValid()"
-              [class.hover:bg-blue-700]="isFormValid()"
-              class="p-2 rounded-lg bg-blue-600 text-white transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
+              [class.hover:bg-dark-blue-700]="isFormValid()"
+              class="p-2 rounded-lg bg-dark-blue-600 text-white transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
@@ -212,4 +199,5 @@
       }
     </div>
   </main>
+  <app-footer />
 </div>

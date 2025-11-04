@@ -2,4 +2,176 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ================================
+   PALETA DE COLORES GLOBAL
+   ================================ */
+@layer base {
+  :root {
+    /* Dark Blue Palette - Light Mode */
+    --dark-blue-50: #f2f3ff;
+    --dark-blue-100: #e8e9ff;
+    --dark-blue-200: #d3d4ff;
+    --dark-blue-300: #b0b0ff;
+    --dark-blue-400: #8983ff;
+    --dark-blue-500: #6351ff;
+    --dark-blue-600: #4e2dfa;
+    --dark-blue-700: #3f1be6;
+    --dark-blue-800: #3416bd;
+    --dark-blue-900: #2d149e;
+    --dark-blue-950: #180a6b;
+
+    /* Semantic Colors - Light Mode */
+    --color-primary: var(--dark-blue-600);
+    --color-primary-hover: var(--dark-blue-700);
+    --color-primary-light: var(--dark-blue-500);
+    --color-primary-dark: var(--dark-blue-800);
+
+    --color-secondary: var(--dark-blue-400);
+    --color-secondary-hover: var(--dark-blue-500);
+
+    --color-accent: var(--dark-blue-300);
+    --color-accent-hover: var(--dark-blue-400);
+
+    --color-background: #ffffff;
+    --color-surface: var(--dark-blue-50);
+    --color-surface-hover: var(--dark-blue-100);
+
+    --color-text-primary: #1a202c;
+    --color-text-secondary: #4a5568;
+    --color-text-muted: #718096;
+
+    --color-border: var(--dark-blue-200);
+    --color-border-light: var(--dark-blue-100);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--dark-blue-600) 0%, var(--dark-blue-400) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--dark-blue-500) 0%, var(--dark-blue-700) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--dark-blue-400) 0%, var(--dark-blue-600) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(99, 81, 255, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(99, 81, 255, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(99, 81, 255, 0.15);
+    --shadow-xl: 0 20px 25px -5px rgba(99, 81, 255, 0.2);
+  }
+
+  .dark {
+    /* Dark Blue Palette - Dark Mode (inverted) */
+    --color-primary: var(--dark-blue-400);
+    --color-primary-hover: var(--dark-blue-300);
+    --color-primary-light: var(--dark-blue-500);
+    --color-primary-dark: var(--dark-blue-200);
+
+    --color-secondary: var(--dark-blue-600);
+    --color-secondary-hover: var(--dark-blue-500);
+
+    --color-accent: var(--dark-blue-500);
+    --color-accent-hover: var(--dark-blue-400);
+
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-surface-hover: #334155;
+
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #cbd5e1;
+    --color-text-muted: #94a3b8;
+
+    --color-border: var(--dark-blue-800);
+    --color-border-light: var(--dark-blue-900);
+
+    /* Gradients Dark Mode */
+    --gradient-primary: linear-gradient(135deg, var(--dark-blue-500) 0%, var(--dark-blue-700) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--dark-blue-400) 0%, var(--dark-blue-600) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--dark-blue-300) 0%, var(--dark-blue-500) 100%);
+
+    /* Shadows Dark Mode */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ================================
+   UTILITY CLASSES
+   ================================ */
+@layer utilities {
+  /* Botones con la paleta dark-blue */
+  .btn-primary {
+    @apply bg-dark-blue-600 hover:bg-dark-blue-700 dark:bg-dark-blue-500 dark:hover:bg-dark-blue-400 text-white transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-dark-blue-100 hover:bg-dark-blue-200 dark:bg-dark-blue-900/30 dark:hover:bg-dark-blue-800/40 text-dark-blue-700 dark:text-dark-blue-300 transition-colors;
+  }
+
+  /* Cards con la paleta */
+  .card-primary {
+    @apply bg-white dark:bg-dark-blue-900/20 border border-dark-blue-200 dark:border-dark-blue-800 rounded-xl transition-all;
+  }
+
+  .card-hover {
+    @apply hover:border-dark-blue-400 dark:hover:border-dark-blue-600 hover:shadow-lg;
+  }
+
+  /* Badges/Labels */
+  .badge-primary {
+    @apply inline-flex items-center px-3 py-1 bg-dark-blue-100 dark:bg-dark-blue-900/30 text-dark-blue-700 dark:text-dark-blue-300 rounded-full text-sm font-medium;
+  }
+
+  /* Iconos con fondo */
+  .icon-container-primary {
+    @apply bg-dark-blue-100 dark:bg-dark-blue-900/30 rounded-xl flex items-center justify-center;
+  }
+
+  .icon-primary {
+    @apply text-dark-blue-600 dark:text-dark-blue-400;
+  }
+
+  /* Gradientes con la paleta */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-dark-blue-600 to-dark-blue-400;
+  }
+
+  .gradient-primary-br {
+    @apply bg-gradient-to-br from-dark-blue-600 to-dark-blue-500;
+  }
+
+  .gradient-text-primary {
+    @apply bg-gradient-to-r from-dark-blue-600 to-dark-blue-400 bg-clip-text text-transparent;
+  }
+
+  /* Superficies con gradiente suave */
+  .surface-gradient-primary {
+    @apply bg-gradient-to-br from-dark-blue-50 to-dark-blue-100 dark:from-dark-blue-900/20 dark:to-dark-blue-800/20;
+  }
+
+  /* Texto con la paleta */
+  .text-primary {
+    @apply text-dark-blue-900 dark:text-dark-blue-100;
+  }
+
+  .text-secondary {
+    @apply text-dark-blue-700 dark:text-dark-blue-300;
+  }
+
+  .text-muted {
+    @apply text-dark-blue-600 dark:text-dark-blue-400;
+  }
+}
+
+/* ================================
+   COMPONENT STYLES
+   ================================ */
+@layer components {
+  /* Blob animations con colores actualizados */
+  .blob-primary {
+    @apply bg-dark-blue-300 dark:bg-dark-blue-900 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-20;
+  }
+
+  .blob-secondary {
+    @apply bg-dark-blue-200 dark:bg-dark-blue-800 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-20;
+  }
+}
+
 /* You can add global styles to this file, and also import other style files */

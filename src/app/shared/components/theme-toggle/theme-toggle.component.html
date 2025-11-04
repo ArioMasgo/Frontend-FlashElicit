@@ -23,9 +23,17 @@
     }
   </button>
 
+  <!-- Backdrop para cerrar al hacer click fuera -->
+  @if (isOpen()) {
+    <div 
+      class="fixed inset-0 z-[999]" 
+      (click)="closeDropdown()"
+    ></div>
+  }
+
   <!-- Dropdown Menu -->
   @if (isOpen()) {
-    <div class="absolute right-0 mt-1 w-40 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+    <div class="absolute right-0 mt-1 w-40 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden z-[1000] animate-in fade-in slide-in-from-top-2 duration-200">
       <!-- Opción: Claro -->
       <button
         (click)="selectTheme('light')"
@@ -39,7 +47,7 @@
         </svg>
         <span class="flex-1 text-gray-900 dark:text-gray-100">Claro</span>
         @if (themeService.theme() === 'light') {
-          <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-dark-blue-600 dark:text-dark-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         }
@@ -58,7 +66,7 @@
         </svg>
         <span class="flex-1 text-gray-900 dark:text-gray-100">Oscuro</span>
         @if (themeService.theme() === 'dark') {
-          <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-dark-blue-600 dark:text-dark-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         }
@@ -77,19 +85,11 @@
         </svg>
         <span class="flex-1 text-gray-900 dark:text-gray-100">Sistema</span>
         @if (themeService.theme() === 'system') {
-          <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-dark-blue-600 dark:text-dark-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         }
       </button>
     </div>
-  }
-
-  <!-- Backdrop para cerrar al hacer click fuera -->
-  @if (isOpen()) {
-    <div 
-      class="fixed inset-0 z-40" 
-      (click)="closeDropdown()"
-    ></div>
   }
 </div>
