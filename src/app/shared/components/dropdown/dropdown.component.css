@@ -1,0 +1,12 @@
+/* Dropdown Component Styles */
+
+:host {
+  display: block;
+  position: relative;
+  z-index: 1000;
+}
+
+/* Asegurar que el dropdown tenga el z-index correcto */
+.relative {
+  position: relative;
+}

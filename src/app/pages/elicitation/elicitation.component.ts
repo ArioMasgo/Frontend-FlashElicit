@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -10,6 +10,7 @@ import { RequisitosScrapingService } from '../../services/requisitos-scraping.se
 import { EnvironmentService } from '../../services/environment.service';
 import { InputType, RequestComentariosScraping, ResponseComentariosScraping } from '../../models/requisitos-scraping.interface';
 import { RequestComentarioUnico, ResponseComentarioUnico } from '../../models/requisitos-Unicos.interface';
+import { DropdownComponent, DropdownOption } from '../../shared/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-elicitation',
@@ -21,7 +22,8 @@ import { RequestComentarioUnico, ResponseComentarioUnico } from '../../models/re
     RequisitosComentarioUnico,
     RequisitosScraping,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    DropdownComponent
   ],
   templateUrl: './elicitation.component.html',
   styleUrl: './elicitation.component.css'
@@ -34,11 +36,56 @@ export class ElicitationComponent {
   resultadoComentario = signal<ResponseComentarioUnico | null>(null);
   resultadoScraping = signal<ResponseComentariosScraping | null>(null);
   criteriosBusqueda = signal<'recientes' | 'relevantes'>('recientes');
-  isCriteriosDropdownOpen = signal<boolean>(false);
+  multiclassModel = signal<'beto' | 'robertuito'>('beto'); // Modelo por defecto
+
+  // Opciones para los dropdowns
+  criteriosOptions: DropdownOption[] = [
+    {
+      value: 'recientes',
+      label: 'Más recientes',
+      description: 'Comentarios ordenados por fecha'
+    },
+    {
+      value: 'relevantes',
+      label: 'Más relevantes',
+      description: 'Comentarios más útiles primero'
+    }
+  ];
+
+  modelOptions: DropdownOption[] = [
+    {
+      value: 'beto',
+      label: 'BETO',
+      description: 'Modelo general balanceado'
+    },
+    {
+      value: 'robertuito',
+      label: 'Robertuito',
+      description: 'Para texto informal'
+    }
+  ];
+
+  inputTypeOptions: DropdownOption[] = [
+    {
+      value: 'comment',
+      label: 'Comentario',
+      description: 'Escribe tu idea o requisito'
+    },
+    {
+      value: 'appLink',
+      label: 'Link de app',
+      description: 'Extrae requisitos desde Play Store'
+    }
+  ];
 
   private requisitosScrapingService = inject(RequisitosScrapingService);
   private readonly SESSION_STORAGE_KEY_COMMENT = 'flashelicit_resultado_comment';
   private readonly SESSION_STORAGE_KEY_SCRAPING = 'flashelicit_resultado_scraping';
+
+  // Referencias a los dropdowns
+  criteriosDropdown = viewChild<DropdownComponent>('criteriosDropdown');
+  modelDropdown = viewChild<DropdownComponent>('modelDropdown');
+  inputTypeDropdown = viewChild<DropdownComponent>('inputTypeDropdown');
 
   // FormGroup reactivo
   elicitationForm = new FormGroup({
@@ -106,8 +153,10 @@ export class ElicitationComponent {
     this.isFormValid.set(false);
     // Resetear criterio de búsqueda al valor por defecto
     this.criteriosBusqueda.set('recientes');
-    // Cerrar dropdown si está abierto
-    this.isCriteriosDropdownOpen.set(false);
+  }
+
+  onInputTypeChange(type: string): void {
+    this.selectInputType(type as InputType);
   }
 
   private validateComment(text: string, showError: boolean): boolean {
@@ -159,7 +208,8 @@ export class ElicitationComponent {
       this.clearResults(); // Limpiar resultados anteriores antes de la nueva petición
 
       const request: RequestComentarioUnico = {
-        comentario: input
+        comentario: input,
+        multiclass_model: this.multiclassModel()
       };
 
       this.requisitosScrapingService.createRequisitoUnico(request).subscribe({
@@ -184,9 +234,10 @@ export class ElicitationComponent {
 
       const request: RequestComentariosScraping = {
         playstore_url: input,
-        max_reviews: 50,
+        max_reviews: 70,
         max_rating: 3,
-        criterios_busqueda: this.criteriosBusqueda()
+        criterios_busqueda: this.criteriosBusqueda(),
+        multiclass_model: this.multiclassModel()
       };
 
       this.requisitosScrapingService.createRequisitosScraping(request).subscribe({
@@ -261,17 +312,31 @@ export class ElicitationComponent {
     }
   }
 
-  // Métodos para manejar dropdown de criterios de búsqueda
-  toggleCriteriosDropdown(): void {
-    this.isCriteriosDropdownOpen.update(val => !val);
+  // Métodos para manejar cambios en dropdowns
+  onCriterioChange(criterio: string): void {
+    this.criteriosBusqueda.set(criterio as 'recientes' | 'relevantes');
   }
 
-  selectCriterio(criterio: 'recientes' | 'relevantes'): void {
-    this.criteriosBusqueda.set(criterio);
-    this.isCriteriosDropdownOpen.set(false);
+  onModelChange(model: string): void {
+    this.multiclassModel.set(model as 'beto' | 'robertuito');
   }
 
-  closeCriteriosDropdown(): void {
-    this.isCriteriosDropdownOpen.set(false);
+  // Métodos para manejar apertura exclusiva de dropdowns
+  onCriteriosDropdownOpened(): void {
+    // Cerrar otros dropdowns
+    this.modelDropdown()?.close();
+    this.inputTypeDropdown()?.close();
+  }
+
+  onModelDropdownOpened(): void {
+    // Cerrar otros dropdowns
+    this.criteriosDropdown()?.close();
+    this.inputTypeDropdown()?.close();
+  }
+
+  onInputTypeDropdownOpened(): void {
+    // Cerrar otros dropdowns
+    this.criteriosDropdown()?.close();
+    this.modelDropdown()?.close();
   }
 }

@@ -23,4 +23,5 @@ export interface Requisito {
 export interface RequestComentarioUnico {
     comentario: string;
     clasificacion?: number;
+    multiclass_model: 'beto' | 'robertuito';
 }

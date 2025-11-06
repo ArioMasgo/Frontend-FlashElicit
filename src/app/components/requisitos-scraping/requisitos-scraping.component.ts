@@ -23,12 +23,39 @@ export class RequisitosScraping {
   currentPage = signal<number>(1);
   itemsPerPage = signal<number>(10);
 
+  // Filtros
+  filtrosPrioridad = signal<Set<string>>(new Set(['Alta', 'Media', 'Baja'])); // Todos seleccionados por defecto
+  ordenComentarios = signal<'desc' | 'asc'>('desc'); // Descendente por defecto (más a menos)
+
   // Exponer Math para el template
   Math = Math;
 
-  // Computed para obtener los requisitos
-  requisitos = computed(() => this.resultado().requirements?.requisitos || []);
+  // Computed para obtener los requisitos originales
+  requisitosOriginales = computed(() => this.resultado().requirements?.requisitos || []);
   resumen = computed(() => this.resultado().requirements?.resumen);
+
+  // Computed para aplicar filtros y ordenamiento
+  requisitos = computed(() => {
+    let resultado = [...this.requisitosOriginales()];
+    
+    // Filtrar por prioridad
+    const filtrosPrio = this.filtrosPrioridad();
+    if (filtrosPrio.size > 0 && filtrosPrio.size < 3) { // Si no están todos seleccionados
+      resultado = resultado.filter(req => filtrosPrio.has(req.prioridad));
+    }
+
+    // Ordenar por comentarios relacionados
+    const orden = this.ordenComentarios();
+    resultado.sort((a, b) => {
+      if (orden === 'desc') {
+        return b.comentarios_relacionados - a.comentarios_relacionados;
+      } else {
+        return a.comentarios_relacionados - b.comentarios_relacionados;
+      }
+    });
+
+    return resultado;
+  });
 
   // Computed para la paginación
   totalPages = computed(() => Math.ceil(this.requisitos().length / this.itemsPerPage()));
@@ -77,6 +104,46 @@ export class RequisitosScraping {
   getPercentage(value: number, total: number): number {
     if (total === 0) return 0;
     return Math.round((value / total) * 100);
+  }
+
+  /**
+   * Alterna el filtro de prioridad
+   */
+  toggleFiltroPrioridad(prioridad: string): void {
+    const filtros = new Set(this.filtrosPrioridad());
+    
+    if (filtros.has(prioridad)) {
+      filtros.delete(prioridad);
+    } else {
+      filtros.add(prioridad);
+    }
+    
+    this.filtrosPrioridad.set(filtros);
+    this.currentPage.set(1); // Resetear a la primera página al filtrar
+  }
+
+  /**
+   * Verifica si una prioridad está seleccionada en el filtro
+   */
+  isPrioridadFiltrada(prioridad: string): boolean {
+    return this.filtrosPrioridad().has(prioridad);
+  }
+
+  /**
+   * Alterna el orden de comentarios relacionados
+   */
+  toggleOrdenComentarios(): void {
+    this.ordenComentarios.update(orden => orden === 'desc' ? 'asc' : 'desc');
+    this.currentPage.set(1); // Resetear a la primera página al cambiar orden
+  }
+
+  /**
+   * Limpia todos los filtros
+   */
+  limpiarFiltros(): void {
+    this.filtrosPrioridad.set(new Set(['Alta', 'Media', 'Baja']));
+    this.ordenComentarios.set('desc');
+    this.currentPage.set(1);
   }
 
   /**

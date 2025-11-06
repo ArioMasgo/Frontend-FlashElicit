@@ -4,7 +4,8 @@ export interface RequestComentariosScraping{
   playstore_url: string,
   max_reviews: number,
   max_rating: number,
-  criterios_busqueda: "recientes" | "relevantes"
+  criterios_busqueda: "recientes" | "relevantes",
+  multiclass_model: 'beto' | 'robertuito'
 }
 export interface ResponseComentariosScraping {
     success:       boolean;

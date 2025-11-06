@@ -1,21 +1,21 @@
 <div class="bg-white dark:bg-[#252b3d] rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
-  <div class="p-6">
+  <div class="p-3 sm:p-6">
     <!-- Header con relevancia -->
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Análisis del Requisito</h2>
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+      <h2 class="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">Análisis del Requisito</h2>
       @if (resultado().es_relevante) {
-        <div class="flex items-center gap-2 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm font-medium">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current">
+        <div class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs sm:text-sm font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-current">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          Relevante
+          <span class="hidden sm:inline">Relevante</span>
         </div>
       } @else {
-        <div class="flex items-center gap-2 px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-sm font-medium">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current">
+        <div class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-xs sm:text-sm font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-current">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
           </svg>
-          No relevante
+          <span class="hidden sm:inline">No relevante</span>
         </div>
       }
     </div>
@@ -31,16 +31,16 @@
     }
 
     <!-- Comentario Original -->
-    <div class="mb-6">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Comentario original:</h3>
-      <div class="bg-gray-50 dark:bg-[#1e2433] p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-        <p class="text-gray-700 dark:text-gray-300">{{ resultado().comentario }}</p>
+    <div class="mb-4 sm:mb-6">
+      <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 sm:mb-3">Comentario original:</h3>
+      <div class="bg-gray-50 dark:bg-[#1e2433] p-3 sm:p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+        <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300">{{ resultado().comentario }}</p>
       </div>
     </div>
 
     <!-- Stats - Solo si es relevante -->
     @if (resultado().es_relevante) {
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <!-- Calificación -->
         <div class="bg-gradient-to-br from-dark-blue-50 to-dark-blue-100 dark:from-dark-blue-900/20 dark:to-dark-blue-800/20 p-4 rounded-lg border border-dark-blue-200 dark:border-dark-blue-800">
           <div class="text-sm text-dark-blue-600 dark:text-dark-blue-400 font-medium mb-1">Calificación</div>
