@@ -231,7 +231,7 @@ export class ElicitationComponent {
 
     } else {
       this.clearResults(); // Limpiar resultados anteriores antes de la nueva petición
-
+      // Extraer app ID del link
       const request: RequestComentariosScraping = {
         playstore_url: input,
         max_reviews: 1000,
