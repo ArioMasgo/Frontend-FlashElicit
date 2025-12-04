@@ -234,7 +234,7 @@ export class ElicitationComponent {
 
       const request: RequestComentariosScraping = {
         playstore_url: input,
-        max_reviews: 70,
+        max_reviews: 1000,
         max_rating: 3,
         criterios_busqueda: this.criteriosBusqueda(),
         multiclass_model: this.multiclassModel()
